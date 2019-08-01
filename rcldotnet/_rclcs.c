@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#define nullptr ((void*)0)
-
 #include <rcl/error_handling.h>
 #include <rcl/expand_topic_name.h>
 #include <rcl/graph.h>
@@ -44,6 +42,8 @@ rcl_node_options_t * rclcs_node_create_default_options()
 {
   rcl_node_options_t  * default_node_options_handle = (rcl_node_options_t *)malloc(sizeof(rcl_node_options_t));
   *default_node_options_handle = rcl_node_get_default_options();
+  default_node_options_handle->domain_id = 17u;
+  default_node_options_handle->use_global_arguments = true;
   return default_node_options_handle;
 }
 

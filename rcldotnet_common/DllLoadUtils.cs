@@ -54,10 +54,10 @@ namespace ROS2 {
       [DllImport ("kernel32.dll", EntryPoint = "FreeLibrary", SetLastError = true)]
       private static extern int FreeLibraryDesktop (IntPtr handle);
 
-      [DllImport ("libdl.so", EntryPoint = "dlopen")]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", EntryPoint = "dlopen")]
       private static extern IntPtr dlopen_unix (String fileName, int flags);
 
-      [DllImport ("libdl.so", EntryPoint = "dlclose")]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", EntryPoint = "dlclose")]
       private static extern int dlclose_unix (IntPtr handle);
 
       [DllImport ("libdl.dylib", EntryPoint = "dlopen")]
@@ -106,7 +106,7 @@ namespace ROS2 {
 
       private static bool IsUnix () {
         try {
-          IntPtr ptr = dlopen_unix ("libdl.so", RTLD_NOW);
+          IntPtr ptr = dlopen_unix ("/usr/lib/x86_64-linux-gnu/libdl.so", RTLD_NOW);
           dlclose_unix (ptr);
           return true;
         } catch (TypeLoadException) {
@@ -233,20 +233,23 @@ namespace ROS2 {
 
     internal class DllLoadUtilsUnix : DllLoadUtils {
 
-      [DllImport ("libdl.so", ExactSpelling = true)]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", CharSet = CharSet.Ansi, ExactSpelling = true)]
       private static extern IntPtr dlopen (String fileName, int flags);
 
-      [DllImport ("libdl.so", ExactSpelling = true)]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", CharSet = CharSet.Ansi, ExactSpelling = true)]
       private static extern IntPtr dlsym (IntPtr handle, String symbol);
 
-      [DllImport ("libdl.so", ExactSpelling = true)]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", CharSet = CharSet.Ansi, ExactSpelling = true)]
       private static extern int dlclose (IntPtr handle);
 
-      [DllImport ("libdl.so", ExactSpelling = true)]
+      [DllImport ("/usr/lib/x86_64-linux-gnu/libdl.so", CharSet = CharSet.Ansi, ExactSpelling = true)]
       private static extern IntPtr dlerror ();
 
+      const int RTLD_LAZY = 1;
       const int RTLD_NOW = 2;
+      const int RTLD_DEEPBIND = 8;
 
+      private static IntPtr libstdc;
       public void FreeLibrary (IntPtr handle) {
         dlclose (handle);
       }
@@ -263,6 +266,9 @@ namespace ROS2 {
       }
 
       public IntPtr LoadLibrary (string fileName) {
+        if (libstdc == IntPtr.Zero)
+          libstdc = dlopen("/usr/lib/x86_64-linux-gnu/libstdc++.so.6", RTLD_NOW | 0x100 | RTLD_DEEPBIND);
+
         string libraryName = "lib" + fileName + "_native.so";
         IntPtr ptr = dlopen (libraryName, RTLD_NOW);
         if (ptr == IntPtr.Zero) {
@@ -272,7 +278,12 @@ namespace ROS2 {
       }
 
       public IntPtr LoadLibraryNoSuffix (string fileName) {
+        if (libstdc == IntPtr.Zero)
+          libstdc = dlopen("/usr/lib/x86_64-linux-gnu/libstdc++.so.6", RTLD_NOW | 0x100 | RTLD_DEEPBIND);
+
         string libraryName = "lib" + fileName + ".so";
+        if (fileName == "rcl")
+          libraryName = "/home/adam/ros2_ws/install/rcl/lib/librcl.so";
         IntPtr ptr = dlopen (libraryName, RTLD_NOW);
         if (ptr == IntPtr.Zero) {
           throw new UnsatisfiedLinkError (libraryName);

@@ -38,19 +38,19 @@ namespace rclcs
 
     public struct rcl_context_t
     {
-        private IntPtr global_arguments;
-        private IntPtr impl;
-        private IntPtr instance_id_storage;
+        public IntPtr global_arguments;
+        public IntPtr impl;
+        public IntPtr instance_id_storage;
     }
     // NOTE(sam): removed unsafe to fix build error
-    public struct rcl_error_string_t
+    unsafe public struct rcl_error_string_t
     {
-        internal IntPtr str;
+        public IntPtr str;
     }
 
     public struct rcl_init_options_t
     {
-        private IntPtr impl;
+        public IntPtr impl;
     }
 
     public struct rcl_node_t
@@ -61,9 +61,9 @@ namespace rclcs
 
     public struct rcl_node_options_t
     {
-        private UIntPtr domain_id;
+        public uint domain_id;
         private rcl_allocator_t allocator;
-        private bool use_global_arguments;
+        public bool use_global_arguments;
         private rcl_arguments_t arguments;
     }
 
@@ -83,7 +83,7 @@ namespace rclcs
         private IntPtr impl;
     }
 
-    //NOTE(sam): does not seem to work on Windows 10 for some reason... 
+    //NOTE(sam): does not seem to work on Windows 10 for some reason...
     //public struct rcl_subscription_options_t
     //{
     //    public rmw_qos_profile_t qos;
@@ -163,4 +163,3 @@ namespace rclcs
 
 #pragma warning restore 0169
 }
-

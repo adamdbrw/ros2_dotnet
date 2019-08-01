@@ -45,9 +45,14 @@ namespace rclcs
             if (context.Ok)
             {
                 handle = NativeMethods.rcl_get_zero_initialized_node();
-                defaultNodeOptions = NativeMethods.rclcs_node_create_default_options();
+                defaultNodeOptions = (IntPtr)NativeMethods.rclcs_node_create_default_options();
+                //rcl_node_options_t defaultOptions = NativeMethods.rclcs_node_create_default_options();
+                //throw new InvalidNodeNameException("Default node: " + defaultNodeOptions.use_global_arguments.ToString() + " domainID = " defaultNodeOptions.domain_id);
+                //rcl_node_options_t defaultOptions = System.Runtime.InteropServices.Marshal.PtrToStructure(defaultNodeOptions, typeof(rcl_node_options_t));
 
-                Utils.CheckReturnEnum(NativeMethods.rcl_node_init(ref handle, nodeName, nodeNamespace, ref context.handle, defaultNodeOptions));
+
+
+                Utils.CheckReturnEnum(NativeMethods.rcl_node_init(ref handle, "nodeName", "unity", ref context.handle, defaultNodeOptions));
 
             }
             else
@@ -104,9 +109,9 @@ namespace rclcs
         public void DestroyNode()
         {
             Utils.CheckReturnEnum(NativeMethods.rcl_node_fini(ref handle));
-            NativeMethods.rclcs_node_dispose_options(defaultNodeOptions);
+            //NativeMethods.rclcs_node_dispose_options(defaultNodeOptions);
         }
-       
+
 
         public Publisher<T> CreatePublisher<T>(string topic) where T : IRclcsMessage, new()
         {
@@ -131,4 +136,3 @@ namespace rclcs
 
 
 }
-

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(rcldotnet C)
+project(rcldotnet)
 
 # Default to C11
 if(NOT CMAKE_C_STANDARD)
@@ -26,6 +26,8 @@ find_package(DotNETExtra REQUIRED)
 
 find_package(rcldotnet_common REQUIRED)
 find_package(rosidl_generator_cs REQUIRED)
+set(CSHARP_TARGET_FRAMEWORK "netcoreapp2.0")
+find_package(DotNETExtra REQUIRED)
 
 # Only build the library if a C typesupport exists
 get_rmw_typesupport(typesupport_impls "rmw_implementation" LANGUAGE "c")
@@ -33,6 +35,8 @@ if(typesupport_impls STREQUAL "")
   message(STATUS "Skipping rclcs because no C typesupport library was found.")
   return()
 endif()
+
+
 
 function(configure_csharp_c_extension_library _library_name)
   install(TARGETS ${_library_name}
@@ -46,16 +50,19 @@ add_library(
   rclcs_native SHARED
   _rclcs.c
 )
+
+set(CMAKE_EXE_LINKER_FLAGS " -static")
+
 ament_target_dependencies(rclcs_native
   "builtin_interfaces"
   "rcl"
   "rosidl_generator_c"
   "rosidl_typesupport_c"
-  "rcl_yaml_param_parser"
   "rcutils"
 )
 ament_export_libraries(rclcs_native)
 configure_csharp_c_extension_library(rclcs_native)
+target_link_libraries(rclcs_native stdc++)
 
 
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
