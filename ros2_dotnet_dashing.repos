@@ -26,4 +26,4 @@
   ros2_dotnet/ros2_dotnet:
     type: git
     url: https://github.com/adamdbrw/ros2_dotnet.git
-    version: dashing
+    version: master
