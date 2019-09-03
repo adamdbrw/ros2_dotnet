@@ -40,7 +40,7 @@ namespace rclcs.Test
         [Test]
         public void SubscriptionCallbackMessageData()
         {
-            int messageData = 0;
+            int messageData = 12345;
             node.CreateSubscription<std_msgs.msg.Int32>("subscription_test_topic", (msg) => { messageData = msg.Data; });
             std_msgs.msg.Int32 published_msg = new std_msgs.msg.Int32();
             published_msg.Data = 42;
@@ -54,9 +54,9 @@ namespace rclcs.Test
         public void SubscriptionQosDefaultDepth()
         {
             int count = 0;
-            node.CreateSubscription<std_msgs.msg.Int32>("subscription_test_topic", 
+            node.CreateSubscription<std_msgs.msg.Int32>("subscription_test_topic",
                                                         (msg) => { count += 1; });
-        
+
             std_msgs.msg.Int32 published_msg = new std_msgs.msg.Int32();
             published_msg.Data = 42;
 
@@ -74,17 +74,17 @@ namespace rclcs.Test
         }
 
         // FIXME(sam): this occasionally returns 6 and to 5... very strange...
-/* 
+/*
         [Test]
         public void SubscriptionQosSensorDataDepth()
         {
             int count = 0;
             QualityOfServiceProfile qosProfile = new QualityOfServiceProfile(QosProfiles.SENSOR_DATA);
 
-            node.CreateSubscription<std_msgs.msg.Int32>("subscription_test_topic", 
+            node.CreateSubscription<std_msgs.msg.Int32>("subscription_test_topic",
                                                         (msg) => { count += 1; },
                                                         qosProfile);
-        
+
             std_msgs.msg.Int32 published_msg = new std_msgs.msg.Int32();
             published_msg.Data = 42;
 

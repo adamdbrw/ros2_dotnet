@@ -21,7 +21,7 @@ set(_assemblies_dep_dlls
     ${rosidl_generator_ASSEMBLIES_DLL}
 )
 
-message("Included assemblies for examples: ${_assemblies_dep_dlls}")
+# message("Included assemblies for examples: ${_assemblies_dep_dlls}")
 
 # TODO(sam): implement add_dotnet_tests (different name?), use this placeholder for now:
 add_dotnet_library(rcldotnet_tests

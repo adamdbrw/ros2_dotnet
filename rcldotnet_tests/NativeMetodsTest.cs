@@ -19,7 +19,7 @@ namespace rclcs.TestNativeMethods
             RCLReturnEnum ret;
             NativeMethods.rcl_reset_error();
             rcl_init_options_t init_options = NativeMethods.rcl_get_zero_initialized_init_options();
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             ret = (RCLReturnEnum)NativeMethods.rcl_init_options_init(ref init_options, allocator);
             Assert.That(ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK));
 
@@ -29,7 +29,7 @@ namespace rclcs.TestNativeMethods
             Assert.That(ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK), Utils.PopRclErrorString());
 
             Assert.That(NativeMethods.rcl_context_is_valid(ref context), Is.True);
-            
+
         }
 
         public static void ShutdownRcl(ref rcl_context_t context)
@@ -77,7 +77,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void GetDefaultAllocator()
         {
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace rclcs.TestNativeMethods
         public void InitOptionsInit()
         {
             rcl_init_options_t init_options = NativeMethods.rcl_get_zero_initialized_init_options();
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             int ret = NativeMethods.rcl_init_options_init(ref init_options, allocator);
             Assert.That((RCLReturnEnum)ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK));
         }
@@ -114,7 +114,7 @@ namespace rclcs.TestNativeMethods
         public void InitValidArgs()
         {
             rcl_init_options_t init_options = NativeMethods.rcl_get_zero_initialized_init_options();
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             NativeMethods.rcl_init_options_init(ref init_options, allocator);
             rcl_context_t context = NativeMethods.rcl_get_zero_initialized_context();
 
@@ -172,7 +172,7 @@ namespace rclcs.TestNativeMethods
             RCLReturnEnum ret = (RCLReturnEnum)NativeMethods.rcl_node_init(ref node, name, nodeNamespace, ref context, nodeOptions);
             Assert.That(ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK));
         }
-        
+
         public static void ShutdownNode(ref rcl_node_t node, IntPtr nodeOptions)
         {
             NativeMethods.rcl_node_fini(ref node);
@@ -266,7 +266,7 @@ namespace rclcs.TestNativeMethods
             RCLReturnEnum ret;
             publisher = NativeMethods.rcl_get_zero_initialized_publisher();
             publisherOptions = NativeMethods.rclcs_publisher_create_default_options();
-            IRclcsMessage msg = new std_msgs.msg.Bool();
+            IMessageInternals msg = new std_msgs.msg.Bool();
             IntPtr typeSupportHandle = msg.TypeSupportHandle;
             ret = (RCLReturnEnum)NativeMethods.rcl_publisher_init(ref publisher, ref node, typeSupportHandle, "publisher_test_topic", publisherOptions);
         }
@@ -287,7 +287,7 @@ namespace rclcs.TestNativeMethods
             InitPublisher(ref publisher, ref node, publisherOptions);
             ShutdownPublisher(ref publisher, ref node, publisherOptions);
 
-        } 
+        }
     }
 
     [TestFixture]
@@ -318,7 +318,7 @@ namespace rclcs.TestNativeMethods
             rcl_publisher_t publisher = new rcl_publisher_t();
             IntPtr publisherOptions = new IntPtr();
             PublisherInitialize.InitPublisher(ref publisher, ref node, publisherOptions);
-            IRclcsMessage msg = new std_msgs.msg.Bool();
+            IMessageInternals msg = new std_msgs.msg.Bool();
             ret = (RCLReturnEnum)NativeMethods.rcl_publish(ref publisher, msg.Handle);
             Assert.That(ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK), Utils.PopRclErrorString());
             PublisherInitialize.ShutdownPublisher(ref publisher, ref node, publisherOptions);
@@ -347,7 +347,7 @@ namespace rclcs.TestNativeMethods
             RCLReturnEnum ret;
             subscription = NativeMethods.rcl_get_zero_initialized_subscription();
             subscriptionOptions = NativeMethods.rclcs_subscription_create_default_options();
-            IRclcsMessage msg = new std_msgs.msg.Bool();
+            IMessageInternals msg = new std_msgs.msg.Bool();
             IntPtr typeSupportHandle = msg.TypeSupportHandle;
             ret = (RCLReturnEnum)NativeMethods.rcl_subscription_init(ref subscription, ref node, typeSupportHandle, "/subscriber_test_topic", subscriptionOptions);
             Assert.That(ret, Is.EqualTo(RCLReturnEnum.RCL_RET_OK), Utils.PopRclErrorString());
@@ -418,7 +418,7 @@ namespace rclcs.TestNativeMethods
         {
             NativeMethods.rcl_reset_error();
 
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             rcl_wait_set_t waitSet = NativeMethods.rcl_get_zero_initialized_wait_set();
             TestUtils.AssertRetOk(NativeMethods.rcl_wait_set_init(ref waitSet, 1, 0, 0, 0, 0, 0, ref context, allocator));
             TestUtils.AssertRetOk(NativeMethods.rcl_wait_set_clear(ref waitSet));
@@ -455,7 +455,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void GetZeroInitializedWaitSet()
         {
-            // NOTE: The struct rcl_wait_set_t contains size_t 
+            // NOTE: The struct rcl_wait_set_t contains size_t
             // fields that are set to UIntPtr in C# declaration,
             // not guaranteed to work for all C implemenations/platforms.
             rcl_wait_set_t waitSet = NativeMethods.rcl_get_zero_initialized_wait_set();
@@ -464,7 +464,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void WaitSetInit()
         {
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             rcl_wait_set_t waitSet = NativeMethods.rcl_get_zero_initialized_wait_set();
             TestUtils.AssertRetOk(NativeMethods.rcl_wait_set_init(ref waitSet, 1, 0, 0, 0, 0, 0, ref context, allocator));
             TestUtils.AssertRetOk(NativeMethods.rcl_wait_set_fini(ref waitSet));
@@ -473,7 +473,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void WaitSetClear()
         {
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             rcl_wait_set_t waitSet = NativeMethods.rcl_get_zero_initialized_wait_set();
             NativeMethods.rcl_wait_set_init(ref waitSet, 1, 0, 0, 0, 0, 0, ref context, allocator);
             TestUtils.AssertRetOk(NativeMethods.rcl_wait_set_clear(ref waitSet));
@@ -511,7 +511,7 @@ namespace rclcs.TestNativeMethods
 
             NativeMethods.rclcs_subscription_set_qos_profile(subscriptionOptions, 0);
 
-            IRclcsMessage msg = new std_msgs.msg.Bool();
+            IMessageInternals msg = new std_msgs.msg.Bool();
             IntPtr typeSupportHandle = msg.TypeSupportHandle;
             NativeMethods.rcl_subscription_init(ref subscription, ref node, typeSupportHandle, "/subscriber_test_topic", subscriptionOptions);
 
@@ -548,7 +548,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void CreateClock()
         {
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             IntPtr clockHandle = NativeMethods.rclcs_ros_clock_create(ref allocator);
             NativeMethods.rclcs_ros_clock_dispose(clockHandle);
         }
@@ -556,7 +556,7 @@ namespace rclcs.TestNativeMethods
         [Test]
         public void ClockGetNow()
         {
-            rcl_allocator_t allocator = NativeMethods.rcl_get_default_allocator();
+            rcl_allocator_t allocator = NativeMethods.rcutils_get_default_allocator();
             IntPtr clockHandle = NativeMethods.rclcs_ros_clock_create(ref allocator);
             long queryNow = 0;
             NativeMethods.rcl_clock_get_now(clockHandle, ref queryNow);

@@ -64,20 +64,18 @@ workflows:
           filters:
             branches:
               only: 
-                - dashing
-                - automatic-testing
+                - master
       - test:
           requires:
             - build
           filters:
             branches:
               only: 
-                - dashing
-                - automatic-testing
+                - master
       - publish:
           requires:
             - test
           filters:
             branches:
               only: 
-                - dashing
+                - master

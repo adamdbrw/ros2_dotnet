@@ -333,7 +333,7 @@ namespace rclcs
         // --- RCUtils ---
         private static readonly IntPtr nativeRCUtils = dllLoadUtils.LoadLibraryNoSuffix("rcutils");
 
-        // rcl_get_default_allocator
+        // rcutils_get_default_allocator
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate rcl_allocator_t RclGetDefaultAllocatorType();
