@@ -1,7 +1,7 @@
 ROS2 for .NET
 =============
 
-Since the project was last updated, I worked on a closed source version at Robotec.AI and made plenty of improvements. Please contact me if you would like to use the module.
+Since the project was last updated, I worked on a closed source version at Robotec.AI and made plenty of improvements. Please contact me (adam.dabrowski@robotec.ai) if you would like to use the module. 
 
 [![CircleCI](https://circleci.com/gh/samiamlabs/ros2_dotnet/tree/dashing.svg?style=svg)](https://circleci.com/gh/samiamlabs/ros2_dotnet/tree/master)
 
