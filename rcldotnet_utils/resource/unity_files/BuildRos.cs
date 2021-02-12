@@ -12,7 +12,7 @@ public class ScriptBatch
         string[] levels = new string[] { "Assets/Scenes/RosExample.unity"};
 
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/BuiltGame.exe", BuildTarget.StandaloneWindows64, BuildOptions.None);
+        BuildPipeline.BuildPlayer(levels, path + "/RosApplication.exe", BuildTarget.StandaloneWindows64, BuildOptions.None);
 
         // Copy a file from the project folder to the build folder, alongside the built game.
         FileUtil.CopyFileOrDirectory("Assets/Resources/start_player.py", path + "/start_player.py");
@@ -25,12 +25,12 @@ public class ScriptBatch
     {
         // Get filename.
         // FIXME(sam): creates folder for some reason... Allow setting name of game?
-        string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "");
+        string path = EditorUtility.SaveFolderPanel("Choose Location of Built ROS Application", "", "");
         // string path = System.IO.Path.GetDirectoryName(file_path);
         string[] levels = new string[] { "Assets/Scenes/RosExample.unity"};
 
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/BuiltGame", BuildTarget.StandaloneLinux64, BuildOptions.None);
+        BuildPipeline.BuildPlayer(levels, path + "/RosApplication", BuildTarget.StandaloneLinux64, BuildOptions.None);
 
         // Copy a file from the project folder to the build folder, alongside the built game.
         FileUtil.CopyFileOrDirectory("Assets/Resources/start_player.py", path + "/start_player.py");

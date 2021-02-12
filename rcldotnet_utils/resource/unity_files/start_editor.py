@@ -19,12 +19,12 @@ config_filename = 'ros_config.yaml'
 if platform.system() == 'Windows':
     yaml_data = {
         'unity_editor_filename': None,
-        'c_libs_asset_path': 'Plugins\\x86_64'
+        'c_libs_asset_path': 'Plugins\\Windows\\x86_64'
     }
 else:
     yaml_data = {
         'unity_editor_filename': None,
-        'c_libs_asset_path': 'Plugins/x86_64'
+        'c_libs_asset_path': 'Plugins/Linux/x86_64'
     }
 
 if os.path.isfile(config_filename):

@@ -46,17 +46,17 @@ def generate_cs(generator_arguments_file, typesupport_impls):
 
     #print("Type_support mapping " + str(type_support_impl_by_filename), file=sys.stderr)
     additional_context = {
-        'get_field_name' : get_field_name,
-        'get_dotnet_type' : get_dotnet_type,
-        'constant_value_to_dotnet' : constant_value_to_dotnet,
-        'get_c_type' : get_c_type,
-        'get_marshal_type' : get_marshal_type,
-        'get_marshal_array_type' : get_marshal_array_type
+        'get_field_name': get_field_name,
+        'get_dotnet_type': get_dotnet_type,
+        'constant_value_to_dotnet': constant_value_to_dotnet,
+        'get_c_type': get_c_type,
+        'get_marshal_type': get_marshal_type,
+        'get_marshal_array_type': get_marshal_array_type
     }
 
     generate_files(generator_arguments_file, mapping, additional_context)
     for type_support in type_support_impl_by_filename.keys():
-        typemapping = { 'idl_typesupport.c.em': type_support }
+        typemapping = {'idl_typesupport.c.em': type_support}
         generate_files(generator_arguments_file, typemapping)
 
 
@@ -107,6 +107,9 @@ def get_builtin_dotnet_type(type_, use_primitives=True):
     if type_ == 'uint8':
         return 'byte' if use_primitives else 'System.Byte'
 
+    if type_ == 'byte':
+        return 'byte' if use_primitives else 'System.Byte'
+
     if type_ == 'int16':
         return 'short' if use_primitives else 'System.Int16'
 
@@ -146,6 +149,7 @@ BASIC_IDL_TYPES_TO_MARSHAL = {
     'boolean': 'I1',
     'octet': 'U1',
     'uint8': 'U1',
+    'byte': 'U1',
     'int8': 'I1',
     'uint16': 'U2',
     'int16': 'I2',
@@ -165,6 +169,7 @@ BASIC_IDL_TYPES_TO_MARSHAL_ARRAY = {
     'boolean': 'byte',
     'octet': 'byte',
     'uint8': 'byte',
+    'byte': 'byte',
     'int8': 'char',
     'uint16': 'short',
     'int16': 'short',

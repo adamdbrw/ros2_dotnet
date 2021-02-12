@@ -7,7 +7,7 @@ import platform
 import pkg_resources
 import stat
 
-from ament_index_python import get_package_prefix
+from ament_index_python import get_package_prefix, get_package_share_directory
 from ament_index_python.packages import PackageNotFoundError
 
 
@@ -46,7 +46,10 @@ class UnityROS2LibCopier:
         ]
 
         self.c_lib_source_dict = {}
-        self.c_lib_destination_dir = unity_project_path + '/Assets/Plugins/x86_64'
+        if platform.system() == 'Windows':
+            self.c_lib_destination_dir = unity_project_path + '/Assets/Plugins/Windows/x86_64'
+        else:
+            self.c_lib_destination_dir = unity_project_path + '/Assets/Plugins/Linux/x86_64'
 
         self.cs_lib_source_dict = {}
         self.cs_lib_destination_dir = unity_project_path + '/Assets/Plugins'
@@ -163,8 +166,9 @@ def directory_is_a_unity_project(dir_path):
 
 
 def copy_unity_files(unity_project_path):
-    unity_files_path = pkg_resources.resource_filename('rcldotnet_utils',
-                                                       'unity_files')
+    # unity_files_path = pkg_resources.resource_filename('rcldotnet_utils',
+    #                                                    'unity_files')
+    unity_files_path = get_package_share_directory('rcldotnet_utils') + '/unity_files'
 
     asset_path = unity_project_path + '/Assets'
 

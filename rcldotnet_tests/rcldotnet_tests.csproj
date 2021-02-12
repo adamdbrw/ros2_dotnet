@@ -23,5 +23,14 @@
     <Reference Include="test_msgs">
       <HintPath>../../../../install/rcldotnet_tests/lib/rcldotnet_tests/dotnet/test_msgs_assembly.dll</HintPath>
     </Reference>
+    <Reference Include="tf2_msgs">
+      <HintPath>../../../../install/rcldotnet_tests/lib/rcldotnet_tests/dotnet/tf2_msgs_assembly.dll</HintPath>
+    </Reference>
+    <Reference Include="sensor_msgs">
+      <HintPath>../../../../install/rcldotnet_tests/lib/rcldotnet_tests/dotnet/sensor_msgs_assembly.dll</HintPath>
+    </Reference>
+    <Reference Include="geometry_msgs">
+      <HintPath>../../../../install/rcldotnet_tests/lib/rcldotnet_tests/dotnet/geometry_msgs_assembly.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

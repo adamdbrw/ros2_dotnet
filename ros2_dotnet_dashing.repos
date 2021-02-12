@@ -14,7 +14,7 @@
     version: master
   ros2_dotnet/ros2_dotnet:
     type: git
-    url: https://github.com/adamdbrw/ros2_dotnet.git
+    url: https://github.com/samiamlabs/ros2_dotnet
     version: master
   # messages
   ros2/common_interfaces:

@@ -126,7 +126,6 @@ public class @(message_class) : @(parent_interface)
 @[    if isinstance(member.type.value_type, BasicType)]@
   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
   public delegate IntPtr NativeReadField@(get_field_name(member.type, member.name, message_class))Type(
-    out int array_size,
     IntPtr messageHandle);
 
   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -166,13 +165,15 @@ public class @(message_class) : @(parent_interface)
     IntPtr messageHandle, int index);
   private static NativeGetNestedHandle@(get_field_name(member.type, member.name, message_class))Type native_get_nested_message_handle_@(member.name) = null;
 @[    end if]@
-  private delegate int NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type(
-    IntPtr messageHandle);
-  private static NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type native_get_array_size_@(member.name) = null;
-
   private delegate bool NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type(
     IntPtr messageHandle, int size);
   private static NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type native_init_sequence_@(member.name) = null;
+
+@[  end if]@
+@[  if isinstance(member.type, (AbstractSequence, Array))]@
+  private delegate int NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type(
+    IntPtr messageHandle);
+  private static NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type native_get_array_size_@(member.name) = null;
 
 @[  end if]@
 @[end for]@
@@ -223,17 +224,20 @@ public class @(message_class) : @(parent_interface)
       (NativeGetNestedHandle@(get_field_name(member.type, member.name, message_class))Type)Marshal.GetDelegateForFunctionPointer(
     native_get_nested_message_handle_@(member.name)_ptr, typeof(NativeGetNestedHandle@(get_field_name(member.type, member.name, message_class))Type));
 @[    end if]@
+    IntPtr native_init_sequence_@(member.name)_ptr =
+      dllLoadUtils.GetProcAddress(nativelibrary, "@(c_full_name)_native_init_sequence_@(member.name)");
+    @(message_class).native_init_sequence_@(member.name) =
+      (NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type)Marshal.GetDelegateForFunctionPointer(
+    native_init_sequence_@(member.name)_ptr, typeof(NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type));
+@[  end if]@
+
+@[  if isinstance(member.type, (AbstractSequence, Array))]@
     IntPtr native_get_array_size_@(member.name)_ptr =
       dllLoadUtils.GetProcAddress(nativelibrary, "@(c_full_name)_native_get_array_size_@(member.name)");
     @(message_class).native_get_array_size_@(member.name) =
       (NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type)Marshal.GetDelegateForFunctionPointer(
     native_get_array_size_@(member.name)_ptr, typeof(NativeGetArraySize@(get_field_name(member.type, member.name, message_class))Type));
 
-    IntPtr native_init_sequence_@(member.name)_ptr =
-      dllLoadUtils.GetProcAddress(nativelibrary, "@(c_full_name)_native_init_sequence_@(member.name)");
-    @(message_class).native_init_sequence_@(member.name) =
-      (NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type)Marshal.GetDelegateForFunctionPointer(
-    native_init_sequence_@(member.name)_ptr, typeof(NativeInitSequence@(get_field_name(member.type, member.name, message_class))Type));
 @[  end if]@
 @[end for]@
   }
@@ -290,7 +294,13 @@ public class @(message_class) : @(parent_interface)
 @[  elif isinstance(member.type, (AbstractSequence, Array)) and isinstance(member.type.value_type, BasicType)]@
     { //TODO - (adam) this is a bit clunky. Is there a better way to marshal unsigned and bool types?
       int arraySize = 0;
-      IntPtr pArr = native_read_field_@(member.name)(out arraySize, handle);
+      IntPtr pArr = native_read_field_@(member.name)(handle);
+
+      arraySize = native_get_array_size_@(member.name)(handle);
+
+      if (pArr == IntPtr.Zero)
+        throw new System.InvalidOperationException("Array pointer is null for member @(member.name), size: " + arraySize.ToString());
+
       @(get_field_name(member.type, member.name, message_class)) = new @(get_dotnet_type(member.type.value_type))[arraySize];
       @(get_marshal_array_type(member.type))[] __@(get_field_name(member.type, member.name, message_class)) = new @(get_marshal_array_type(member.type))[arraySize];
       int start = 0;

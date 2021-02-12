@@ -5,8 +5,10 @@ project(rcldotnet_tests C)
 find_package(ament_cmake REQUIRED)
 find_package(rcldotnet REQUIRED)
 find_package(rcldotnet_common REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(test_msgs REQUIRED)
+find_package(tf2_msgs REQUIRED)
 find_package(dotnet_cmake_module REQUIRED)
 find_package(rosidl_generator_cs REQUIRED)
 
@@ -16,8 +18,11 @@ find_package(DotNETExtra REQUIRED)
 set(_assemblies_dep_dlls
     ${rcldotnet_common_ASSEMBLIES_DLL}
     ${rcldotnet_ASSEMBLIES_DLL}
+    ${sensor_msgs_ASSEMBLIES_DLL}
     ${std_msgs_ASSEMBLIES_DLL}
     ${test_msgs_ASSEMBLIES_DLL}
+    ${tf2_msgs_ASSEMBLIES_DLL}
+    ${geometry_msgs_ASSEMBLIES_DLL}
     ${rosidl_generator_ASSEMBLIES_DLL}
 )
 
